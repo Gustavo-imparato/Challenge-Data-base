@@ -110,19 +110,20 @@ except cx_Oracle.DatabaseError as e:
     print("Erro ao executar a procedure: ", error.message)
     connection.rollback()
 
+#update produto
 try:
     
     id_produto = 1
     nm_produto = "nome"
+    preco_custo = 60.67
     descricao_produto = "breve descricao"
-    preco_custo = 60
-    preco_venda = 80
-    estoque = "estoque"
+    preco_venda = 79.99
+    estoque = 24
     tb_categoria_id_categoria = 1
     tb_modelo_id_modelo = 4
     tb_modelo_tb_marca_id_marca = 6
 
-    cursor.callproc("CRIAR_PRODUTO", [id_produto, nm_produto, descricao_produto, preco_custo, preco_venda, estoque, tb_categoria_id_categoria, tb_modelo_id_modelo, tb_modelo_tb_marca_id_marca])
+    cursor.callproc("CRIAR_PRODUTO", [id_produto, nm_produto, preco_custo, descricao_produto, preco_venda, estoque, tb_categoria_id_categoria, tb_modelo_id_modelo, tb_modelo_tb_marca_id_marca])
     print("Procedure para update de produto executada com sucesso :) ")
 
     connection.commit()
