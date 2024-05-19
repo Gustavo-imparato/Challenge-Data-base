@@ -1,4 +1,3 @@
-
 -- FUNCOES PARA VALIDACAO DE DADOS
  
 CREATE OR REPLACE FUNCTION VALIDACAO_PRODUTO (
@@ -56,6 +55,62 @@ BEGIN
     END IF;
     RETURN TRUE;
 END;
+
+--FUNCAO DE VALIDACAO DE EMPRESA
+
+CREATE OR REPLACE FUNCTION VALIDACAO_EMPRESA (
+    p_id_empresa IN tb_empresa.id_empresa%TYPE,
+    p_nm_empresa IN tb_empresa.nm_empresa%TYPE
+) RETURN BOOLEAN
+IS
+BEGIN
+    IF p_id_empresa IS NULL OR p_nm_empresa IS NULL THEN
+        RETURN FALSE;
+    END IF;
+    IF LENGTH(p_nm_empresa) < 1 OR LENGTH(p_nm_empresa) > 150 THEN
+        RETURN FALSE;
+    END IF;
+    RETURN TRUE;
+END;
+
+--FUNCAO DE VALIDACAO DE USUARIO
+
+CREATE OR REPLACE FUNCTION VALIDACAO_USUARIO (
+    p_id_usuario IN tb_usuario.id_usuario%TYPE,
+    p_nm_usuario IN tb_usuario.nm_usuario%TYPE
+) RETURN BOOLEAN
+IS
+BEGIN
+    IF p_id_usuario IS NULL OR p_nm_usuario IS NULL THEN
+        RETURN FALSE;
+    END IF;
+    IF LENGTH(p_nm_usuario) < 1 OR LENGTH(p_nm_usuario) > 150 THEN
+        RETURN FALSE;
+    END IF;
+    RETURN TRUE;
+END;
+
+--FUNCAO DE VALIDACAO DE BACKLOG
+
+CREATE OR REPLACE FUNCTION VALIDACAO_BACKLOG (
+    p_id_backlog IN tb_backlog.id_backlog%TYPE,
+    p_nm_backlog IN tb_backlog.nm_backlog%TYPE,
+    p_descricao_backlog IN tb_backlog.descricao_backlog%TYPE
+) RETURN BOOLEAN
+IS
+BEGIN
+    IF p_id_backlog IS NULL OR p_nm_backlog IS NULL THEN
+        RETURN FALSE;
+    END IF;
+    IF LENGTH(p_nm_backlog) < 1 OR LENGTH(p_nm_backlog) > 150 THEN
+        RETURN FALSE;
+    END IF;
+    IF p_descricao_backlog IS NOT NULL AND (LENGTH(p_descricao_backlog) < 1 OR LENGTH(p_descricao_backlog) > 500) THEN
+        RETURN FALSE;
+    END IF;
+    RETURN TRUE;
+END;
+
 
 --PROCEDURES
  
@@ -236,6 +291,64 @@ EXCEPTION
         dbms_output.put_line('erro no update de carrinho' || SQLERRM);
 END;
 
+--UPDATE EMPRESA
+
+CREATE OR REPLACE PROCEDURE     CRIAR_EMPRESA(
+    p_id_empresa IN NUMBER,
+    p_nm_empresa IN VARCHAR2,
+    p_descricao_empresa IN VARCHAR2
+)
+AS 
+BEGIN
+    UPDATE tb_empresa
+    SET nm_empresa = p_nm_empresa,
+        descricao_empresa = p_descricao_empresa
+    WHERE id_empresa = p_id_empresa;
+    
+    dbms_output.put_line('Update realizado com sucesso em empresa!');
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Erro no update de empresa: ' || SQLERRM);
+END;
+
+--UPDATE USUARIO 
+CREATE OR REPLACE PROCEDURE CRIAR_USUARIO(
+    p_id_usuario IN NUMBER,
+    p_nm_usuario IN VARCHAR2,
+    p_descricao_usuario IN VARCHAR2
+)
+AS 
+BEGIN
+    UPDATE tb_usuario
+    SET nm_usuario = p_nm_usuario,
+        descricao_usuario = p_descricao_usuario
+    WHERE id_usuario = p_id_usuario;
+    
+    dbms_output.put_line('Update realizado com sucesso em usuário!');
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Erro no update de usuário: ' || SQLERRM);
+END;
+
+--UPDATE BACKLOG
+CREATE OR REPLACE PROCEDURE CRIAR_BACKLOG(
+    p_id_backlog IN NUMBER,
+    p_nm_backlog IN VARCHAR2,
+    p_descricao_backlog IN VARCHAR2
+)
+AS 
+BEGIN
+    UPDATE tb_backlog
+    SET nm_backlog = p_nm_backlog,
+        descricao_backlog = p_descricao_backlog
+    WHERE id_backlog = p_id_backlog;
+    
+    dbms_output.put_line('update realizado com sucesso em backlog!');
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('Erro no update de backlog: ' || SQLERRM);
+END;
+
 
 --PROCEDURE DELETE
 
@@ -368,6 +481,69 @@ EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Erro ao deletar carrinho: ' || SQLERRM);
 END deletar_carrinho;
+
+--DELETE EMPRESA 
+CREATE OR REPLACE PROCEDURE deletar_empresa (
+   id_empresa IN NUMBER
+)
+IS
+BEGIN
+
+    IF id_empresa IS NULL OR id_empresa = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'ID da empresa inválido: nulo ou zero!');
+    END IF;
+
+    DELETE FROM tb_empresa
+    WHERE id_empresa = id_empresa;
+
+    -- Mensagem de sucesso
+    DBMS_OUTPUT.PUT_LINE('Empresa com ID ' || id_empresa || ' deletada com sucesso!');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao deletar empresa: ' || SQLERRM);
+END deletar_empresa;
+
+--DELETAR USUARIO 
+CREATE OR REPLACE PROCEDURE deletar_usuario (
+   id_usuario IN NUMBER
+)
+IS
+BEGIN
+
+    IF id_usuario IS NULL OR id_usuario = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'ID do usuário inválido: nulo ou zero!');
+    END IF;
+
+    DELETE FROM tb_usuario
+    WHERE id_usuario = id_usuario;
+
+    -- Mensagem de sucesso
+    DBMS_OUTPUT.PUT_LINE('Usuário com ID ' || id_usuario || ' deletado com sucesso!');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao deletar usuário: ' || SQLERRM);
+END deletar_usuario;
+
+--DELETE BACKLOG
+CREATE OR REPLACE PROCEDURE deletar_backlog (
+   id_backlog IN NUMBER
+)
+IS
+BEGIN
+
+    IF id_backlog IS NULL OR id_backlog = 0 THEN
+        RAISE_APPLICATION_ERROR(-20003, 'ID do backlog inválido: nulo ou zero!');
+    END IF;
+
+    DELETE FROM tb_backlog
+    WHERE id_backlog = id_backlog;
+
+    -- Mensagem de sucesso
+    DBMS_OUTPUT.PUT_LINE('Backlog com ID ' || id_backlog || ' deletado com sucesso!');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erro ao deletar backlog: ' || SQLERRM);
+END deletar_backlog;
 
 
 DECLARE
