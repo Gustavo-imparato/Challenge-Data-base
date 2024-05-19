@@ -1,3 +1,8 @@
+--Nova versão da sprint 1 para atender aos novos requisistos de negocio, 
+--Não fiz nenhuma alteração no codigo existente já que o professor não apontou nenhum ponto onde deveriamos mudar. 
+
+
+
 DROP TABLE tb_carrinho1;
 DROP TABLE tb_historico_venda1;
 DROP TABLE tb_produto1;
@@ -69,6 +74,26 @@ CREATE TABLE tb_produto1 (
     tb_modelo_tb_marca_id_marca NUMBER NOT NULL
 );
 
+CREATE TABLE tb_empresa (
+    id_empresa    NUMBER NOT NULL,
+    nm_empresa    VARCHAR2(150) NOT NULL,
+    CONSTRAINT tb_empresa_pk PRIMARY KEY (id_empresa)
+);
+
+CREATE TABLE tb_usuario (
+    id_usuario    NUMBER NOT NULL,
+    nm_usuario    VARCHAR2(150) NOT NULL,
+    CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
+);
+
+CREATE TABLE tb_backlog (
+    id_backlog          NUMBER NOT NULL,
+    nm_backlog          VARCHAR2(150) NOT NULL,
+    descricao_backlog   VARCHAR2(500),
+    CONSTRAINT tb_backlog_pk PRIMARY KEY (id_backlog)
+);
+
+
 ALTER TABLE tb_produto1
     ADD CONSTRAINT tb_produto1_pk PRIMARY KEY (id_produto,
                                                tb_modelo_id_modelo,
@@ -102,6 +127,25 @@ ALTER TABLE tb_produto1
                                                          tb_modelo_tb_marca_id_marca)
         REFERENCES tb_modelo1 (id_modelo,
                                tb_marca_id_marca);
+
+
+
+ALTER TABLE tb_usuario
+ADD tb_empresa_id_empresa NUMBER NOT NULL;
+
+
+ALTER TABLE tb_usuario
+ADD CONSTRAINT tb_usuario_tb_empresa_fk FOREIGN KEY (tb_empresa_id_empresa)
+REFERENCES tb_empresa (id_empresa);
+
+
+ALTER TABLE tb_backlog
+ADD tb_usuario_id_usuario NUMBER NOT NULL;
+
+
+ALTER TABLE tb_backlog
+ADD CONSTRAINT tb_backlog_tb_usuario_fk FOREIGN KEY (tb_usuario_id_usuario)
+REFERENCES tb_usuario (id_usuario);
 
 
 --insercoes 
