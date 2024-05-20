@@ -77,6 +77,10 @@ CREATE TABLE tb_produto1 (
     tb_modelo_tb_marca_id_marca NUMBER NOT NULL
 );
 
+--As tabelas abaixo foram criadas depois da spint 1 
+--elas não se relacionam com as demais 
+
+
 CREATE TABLE tb_empresa1 (
     id_empresa    NUMBER PRIMARY KEY,
     nm_empresa    VARCHAR2(150) NOT NULL,
@@ -96,6 +100,8 @@ CREATE TABLE tb_backlog1 (
     titulo  VARCHAR2(150) NOT NULL,
     descricao_backlog   VARCHAR2(500)
 );
+
+--relacionamentos das tabelas
 
 ALTER TABLE tb_produto1
     ADD CONSTRAINT tb_produto1_pk PRIMARY KEY (id_produto,
@@ -130,10 +136,6 @@ ALTER TABLE tb_produto1
                                                          tb_modelo_tb_marca_id_marca)
         REFERENCES tb_modelo1 (id_modelo,
                                tb_marca_id_marca);
-
---AS tabelas abaixo foram criadas depois da spint 1 
---elas não se relacionam com as demais 
-
 
 ALTER TABLE tb_usuario1
 ADD id_empresa NUMBER NOT NULL;
