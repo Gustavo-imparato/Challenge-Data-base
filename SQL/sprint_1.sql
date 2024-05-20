@@ -2,16 +2,15 @@
 --Não fiz nenhuma alteração no codigo existente já que o professor não apontou nenhum ponto onde deveriamos mudar. 
 
 
-
 DROP TABLE tb_carrinho1;
 DROP TABLE tb_historico_venda1;
 DROP TABLE tb_produto1;
 DROP TABLE tb_modelo1;
 DROP TABLE tb_categoria1;
 DROP TABLE tb_marca1;
-DROP TABLE tb_empresa1;
-DROP TABLE tb_usuario1;
 DROP TABLE tb_backlog1;
+DROP TABLE tb_usuario1;
+DROP TABLE tb_empresa1;
 
 CREATE TABLE tb_carrinho1 (
     id_carrinho                          NUMBER NOT NULL,
@@ -209,6 +208,39 @@ INSERT INTO tb_carrinho1 (id_carrinho, qnt_produtos, sub_total, tb_produto_id_pr
 INSERT INTO tb_carrinho1 (id_carrinho, qnt_produtos, sub_total, tb_produto_id_produto, tb_historico_venda_id_venda, tb_produto_tb_modelo_id_modelo, tb_produto_tb_modelo_id_marca, tb_produto_tb_categoria_id_categoria) VALUES (3, 3, 899.97, 3, 2, 3, 3, 1);
 INSERT INTO tb_carrinho1 (id_carrinho, qnt_produtos, sub_total, tb_produto_id_produto, tb_historico_venda_id_venda, tb_produto_tb_modelo_id_modelo, tb_produto_tb_modelo_id_marca, tb_produto_tb_categoria_id_categoria) VALUES (4, 1, 79.99, 4, 2, 4, 4, 2);
 INSERT INTO tb_carrinho1 (id_carrinho, qnt_produtos, sub_total, tb_produto_id_produto, tb_historico_venda_id_venda, tb_produto_tb_modelo_id_modelo, tb_produto_tb_modelo_id_marca, tb_produto_tb_categoria_id_categoria) VALUES (5, 1, 249.99, 5, 3, 5, 5, 1);
+
+--insercoes na tabela empresa1
+INSERT INTO tb_empresa1 (id_empresa, nm_empresa, razao_social, nome_fantasia)
+VALUES (1, 'Tech Corp', 'Tech Corporation Ltda', 'TechCorp');
+
+INSERT INTO tb_empresa1 (id_empresa, nm_empresa, razao_social, nome_fantasia)
+VALUES (2, 'Edu Solutions', 'Educação Soluções S.A.', 'EduSolutions');
+
+INSERT INTO tb_empresa1 (id_empresa, nm_empresa, razao_social, nome_fantasia)
+VALUES (3, 'Health Plus', 'Saúde Mais Ltda', 'HealthPlus');
+
+
+--insercoes na tabela usuario1
+INSERT INTO tb_usuario1 (id_usuario, nome, nm_usuario, senha, id_empresa)
+VALUES (1, 'João Silva', 'joaosilva', 'senha123', 1);
+
+INSERT INTO tb_usuario1 (id_usuario, nome, nm_usuario, senha, id_empresa)
+VALUES (2, 'Maria Oliveira', 'mariaoliveira', 'senha456', 2);
+
+INSERT INTO tb_usuario1 (id_usuario, nome, nm_usuario, senha, id_empresa)
+VALUES (3, 'Carlos Souza', 'carlossouza', 'senha789', 3);
+
+
+--insercoes na tabela backlog1
+INSERT INTO tb_backlog1 (id_backlog, titulo, descricao_backlog, id_usuario, id_empresa)
+VALUES (1, 'Projeto Alpha', 'Desenvolvimento do projeto Alpha', 1, 1);
+
+INSERT INTO tb_backlog1 (id_backlog, titulo, descricao_backlog, id_usuario, id_empresa)
+VALUES (2, 'Implementação Beta', 'Implementação das funcionalidades Beta', 2, 2);
+
+INSERT INTO tb_backlog1 (id_backlog, titulo, descricao_backlog, id_usuario, id_empresa)
+VALUES (3, 'Teste Gama', 'Testes do sistema Gama', 3, 3);
+
 
 --BLOCOS ANONIMOS
 
