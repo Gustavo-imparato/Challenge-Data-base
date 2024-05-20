@@ -9,6 +9,9 @@ DROP TABLE tb_produto1;
 DROP TABLE tb_modelo1;
 DROP TABLE tb_categoria1;
 DROP TABLE tb_marca1;
+DROP TABLE tb_empresa1;
+DROP TABLE tb_usuario1;
+DROP TABLE tb_backlog1;
 
 CREATE TABLE tb_carrinho1 (
     id_carrinho                          NUMBER NOT NULL,
@@ -74,25 +77,25 @@ CREATE TABLE tb_produto1 (
     tb_modelo_tb_marca_id_marca NUMBER NOT NULL
 );
 
-CREATE TABLE tb_empresa (
-    id_empresa    NUMBER NOT NULL,
+CREATE TABLE tb_empresa1 (
+    id_empresa    NUMBER PRIMARY KEY,
     nm_empresa    VARCHAR2(150) NOT NULL,
-    CONSTRAINT tb_empresa_pk PRIMARY KEY (id_empresa)
+    razao_social VARCHAR2(150),
+    nome_fantasia VARCHAR2(150)
 );
 
-CREATE TABLE tb_usuario (
-    id_usuario    NUMBER NOT NULL,
-    nm_usuario    VARCHAR2(150) NOT NULL,
-    CONSTRAINT tb_usuario_pk PRIMARY KEY (id_usuario)
+CREATE TABLE tb_usuario1 (
+    id_usuario NUMBER PRIMARY KEY,
+    nome VARCHAR2(50),
+    nm_usuario VARCHAR2(50) NOT NULL,
+    senha VARCHAR2(20)
 );
 
-CREATE TABLE tb_backlog (
-    id_backlog          NUMBER NOT NULL,
-    nm_backlog          VARCHAR2(150) NOT NULL,
-    descricao_backlog   VARCHAR2(500),
-    CONSTRAINT tb_backlog_pk PRIMARY KEY (id_backlog)
+CREATE TABLE tb_backlog1 (
+    id_backlog NUMBER PRIMARY KEY,
+    titulo  VARCHAR2(150) NOT NULL,
+    descricao_backlog   VARCHAR2(500)
 );
-
 
 ALTER TABLE tb_produto1
     ADD CONSTRAINT tb_produto1_pk PRIMARY KEY (id_produto,
@@ -128,24 +131,31 @@ ALTER TABLE tb_produto1
         REFERENCES tb_modelo1 (id_modelo,
                                tb_marca_id_marca);
 
+--AS tabelas abaixo foram criadas depois da spint 1 
+--elas não se relacionam com as demais 
 
 
-ALTER TABLE tb_usuario
-ADD tb_empresa_id_empresa NUMBER NOT NULL;
+ALTER TABLE tb_usuario1
+ADD id_empresa NUMBER NOT NULL;
 
+ALTER TABLE tb_usuario1
+ADD CONSTRAINT fk_usuario_empresa FOREIGN KEY (id_empresa)
+REFERENCES tb_empresa1 (id_empresa);
 
-ALTER TABLE tb_usuario
-ADD CONSTRAINT tb_usuario_tb_empresa_fk FOREIGN KEY (tb_empresa_id_empresa)
-REFERENCES tb_empresa (id_empresa);
+ALTER TABLE tb_backlog1
+ADD id_usuario NUMBER NOT NULL;
 
+ALTER TABLE tb_backlog1
+ADD id_empresa NUMBER NOT NULL;
 
-ALTER TABLE tb_backlog
-ADD tb_usuario_id_usuario NUMBER NOT NULL;
+ALTER TABLE tb_backlog1
+ADD CONSTRAINT fk_backlog_usuario FOREIGN KEY (id_usuario)
+REFERENCES tb_usuario1 (id_usuario);
 
+ALTER TABLE tb_backlog1
+ADD CONSTRAINT fk_backlog_empresa FOREIGN KEY (id_empresa)
+REFERENCES tb_empresa1 (id_empresa);
 
-ALTER TABLE tb_backlog
-ADD CONSTRAINT tb_backlog_tb_usuario_fk FOREIGN KEY (tb_usuario_id_usuario)
-REFERENCES tb_usuario (id_usuario);
 
 
 --insercoes 
