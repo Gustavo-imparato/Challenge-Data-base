@@ -1,10 +1,10 @@
 --ENTREGA 3 
-
-set serveroutput on;
+--PROFESSOR A CRIACAO DA TABELA PARA AUDITORIA ESTA JUNTO COM O CODIGO DA SPRINT 1 PARA MELHOR ORGANIZAÇÃO DO PROJETO, 
+--DE RESTO TANTO A ENTREGA DA SPRINT 1 E A 2 NAO FORAM ALTERADAS, JA QUE O PROFESSOR ANTERIOR NAO PEDIU NENHUMA MUDANCA OU CORRECAO
 
 --PROCEDURES
 
---procedure 1- faz o join com duas tabelas tb_cae tb_historico_venda e converte os dados para Json usando a funcao ConverteJson
+--procedure 1- faz o join com duas tabelas tb_carrinho1 tb_historico_venda1 e converte os dados para Json usando a funcao ConverteJson
 SET SERVEROUTPUT ON;
 DECLARE
     v_id_carrinho tb_carrinho1.id_carrinho%TYPE;
@@ -205,5 +205,102 @@ BEGIN
     v_result := listar_empresa_backlog;
     DBMS_OUTPUT.PUT_LINE(v_result);
 END;
+
+--TRIGGERS
+--TRIGGER PARA INSERT
+
+CREATE OR REPLACE TRIGGER after_insert_tb_produto1
+AFTER INSERT ON tb_produto1
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_auditoria_produto1 (operacao_tipo, dados_anteriores, dados_novos, usuario_nome)
+    VALUES (
+        'INSERT',
+        NULL,
+        'id_produto=' || :NEW.id_produto || 
+        ', nm_produto=' || :NEW.nm_produto || 
+        ', preco_custo=' || :NEW.preco_custo || 
+        ', descricao_produto=' || :NEW.descricao_produto || 
+        ', preco_venda=' || :NEW.preco_venda || 
+        ', estoque=' || :NEW.estoque || 
+        ', tb_categoria_id_categoria=' || :NEW.tb_categoria_id_categoria || 
+        ', tb_modelo_id_modelo=' || :NEW.tb_modelo_id_modelo || 
+        ', tb_modelo_tb_marca_id_marca=' || :NEW.tb_modelo_tb_marca_id_marca,
+        USER
+    );
+END;
+
+--TRIGGER PARA UPDATE
+
+CREATE OR REPLACE TRIGGER after_update_tb_produto1
+AFTER UPDATE ON tb_produto1
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_auditoria_produto1 (operacao_tipo, dados_anteriores, dados_novos, usuario_nome)
+    VALUES (
+        'UPDATE',
+        'id_produto=' || :OLD.id_produto || 
+        ', nm_produto=' || :OLD.nm_produto || 
+        ', preco_custo=' || :OLD.preco_custo || 
+        ', descricao_produto=' || :OLD.descricao_produto || 
+        ', preco_venda=' || :OLD.preco_venda || 
+        ', estoque=' || :OLD.estoque || 
+        ', tb_categoria_id_categoria=' || :OLD.tb_categoria_id_categoria || 
+        ', tb_modelo_id_modelo=' || :OLD.tb_modelo_id_modelo || 
+        ', tb_modelo_tb_marca_id_marca=' || :OLD.tb_modelo_tb_marca_id_marca,
+        'id_produto=' || :NEW.id_produto || 
+        ', nm_produto=' || :NEW.nm_produto || 
+        ', preco_custo=' || :NEW.preco_custo || 
+        ', descricao_produto=' || :NEW.descricao_produto || 
+        ', preco_venda=' || :NEW.preco_venda || 
+        ', estoque=' || :NEW.estoque || 
+        ', tb_categoria_id_categoria=' || :NEW.tb_categoria_id_categoria || 
+        ', tb_modelo_id_modelo=' || :NEW.tb_modelo_id_modelo || 
+        ', tb_modelo_tb_marca_id_marca=' || :NEW.tb_modelo_tb_marca_id_marca,
+        USER
+    );
+END;
+
+--TRIGGER PARA DELETE
+
+CREATE OR REPLACE TRIGGER after_delete_tb_produto1
+AFTER DELETE ON tb_produto1
+FOR EACH ROW
+BEGIN
+    INSERT INTO tb_auditoria_produto1 (operacao_tipo, dados_anteriores, dados_novos, usuario_nome)
+    VALUES (
+        'DELETE',
+        'id_produto=' || :OLD.id_produto || 
+        ', nm_produto=' || :OLD.nm_produto || 
+        ', preco_custo=' || :OLD.preco_custo || 
+        ', descricao_produto=' || :OLD.descricao_produto || 
+        ', preco_venda=' || :OLD.preco_venda || 
+        ', estoque=' || :OLD.estoque || 
+        ', tb_categoria_id_categoria=' || :OLD.tb_categoria_id_categoria || 
+        ', tb_modelo_id_modelo=' || :OLD.tb_modelo_id_modelo || 
+        ', tb_modelo_tb_marca_id_marca=' || :OLD.tb_modelo_tb_marca_id_marca,
+        NULL,
+        USER
+    );
+END;
+
+--TESTE DO TRIGGER PARA INSERTS
+INSERT INTO tb_produto1 (id_produto, nm_produto, preco_custo, descricao_produto, preco_venda, estoque, tb_categoria_id_categoria, tb_modelo_id_modelo, tb_modelo_tb_marca_id_marca)
+VALUES (6, 'Produto A', 100.00, 'Descrição do Produto A', 150.00, 'S', 1, 5, 5);
+
+SELECT * FROM tb_auditoria_produto1;
+
+--TESTE DO TRIGGER PARA  UPDATE
+UPDATE tb_produto1
+SET preco_venda = 160.00
+WHERE id_produto = 6;
+
+SELECT * FROM tb_auditoria_produto1;
+
+--TESTE DO TRIGGER PARA DELETE
+DELETE FROM tb_produto1
+WHERE id_produto = 6;
+
+SELECT * FROM tb_auditoria_produto1;
 
 
